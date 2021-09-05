@@ -12,4 +12,6 @@ public interface UserRepository extends JpaRepository<ApplicationUser,Long> {
     @Override
     void delete(ApplicationUser user);
 
+
+
 }

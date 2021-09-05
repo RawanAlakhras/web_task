@@ -14,7 +14,8 @@ import org.springframework.web.servlet.view.RedirectView;
 import javax.annotation.security.RolesAllowed;
 import java.util.ArrayList;
 
-@Controller
+@RestController
+@CrossOrigin(origins = "http://localhost:4200")
 public class UserController {
 
     @Autowired
@@ -47,6 +48,12 @@ public class UserController {
         newUser = userRepository.save(newUser);
 
         return new RedirectView("/login");
+    }
+
+    //to add new user
+    @PostMapping("/users")
+    void addUser(@RequestBody ApplicationUser user) {
+        userRepository.save(user);
     }
 
 }
