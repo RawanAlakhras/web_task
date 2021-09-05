@@ -1,19 +1,17 @@
 package com.example.web_task.Servic;
 
+import com.example.web_task.Repository.DeviceRepository;
 import com.example.web_task.Repository.PrivilegeRepository;
 import com.example.web_task.Repository.RoleRepository;
 import com.example.web_task.Repository.UserRepository;
 import com.example.web_task.model.ApplicationUser;
+import com.example.web_task.model.Devices;
 import com.example.web_task.model.Privilege;
 import com.example.web_task.model.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
@@ -39,6 +37,15 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
     @Autowired
     BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    @Autowired
+    DeviceRepository deviceRepository;
+
+    private final DeviceServic deviceServic;
+
+    public SetupDataLoader(DeviceServic deviceServic) {
+        this.deviceServic = deviceServic;
+    }
+
     @Override
     @Transactional
     public void onApplicationEvent(ContextRefreshedEvent event) {
@@ -59,6 +66,11 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         // == create initial user
         ApplicationUser adminUser=createUserIfNotFound("admin@test.com",bCryptPasswordEncoder.encode("123"), "Admin", "Admin", new ArrayList<>(Arrays.asList(adminRole)));
         ApplicationUser normalUser=createUserIfNotFound("user@test.com",bCryptPasswordEncoder.encode("123"), "Andy", "Bicheal", new ArrayList<>(Arrays.asList(userRole)));
+
+        //== create initial Devices
+        //Devices device=new Devices("Active","pet tracker","solution a","398","saporo","description","v-01",normalUser);
+        Devices newDevice=deviceServic.addDevice(new Devices("Active","pet tracker","solution a","398","saporo","description","v-01",normalUser));
+//        deviceServic.addDevice(device);
         alreadySetup = true;
     }
     @Transactional

@@ -33,6 +33,9 @@ public class ApplicationUser implements UserDetails {
                     name = "role_id", referencedColumnName = "id"))
     private Collection<Role> roles;
 
+    @OneToMany(mappedBy = "owner")
+    private List <Devices>devices;
+
 
     public ApplicationUser() {
 
@@ -52,6 +55,14 @@ public class ApplicationUser implements UserDetails {
         this.firstName = firstName;
         this.lastName = lastName;
 
+    }
+
+    public List<Devices> getDevices() {
+        return devices;
+    }
+
+    public void setDevices(List<Devices> devices) {
+        this.devices = devices;
     }
 
     public Collection<Role> getRoles() {
